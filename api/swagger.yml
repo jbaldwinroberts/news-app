@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: News App (API)
+  description: An API to provide news items from various RSS feeds
+  contact:
+    name: Joseph Roberts
+    email: j.baldwin.roberts@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /items:
+    get:
+      description: |
+        Returns an array of news items
+      operationId: getItems
+      parameters:
+        - name: titles
+          in: query
+          description: feed titles to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: categories
+          in: query
+          description: feed categories to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: items response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /titles:
+    get:
+      description: |
+        Returns an array of feed titles
+      operationId: getTitles
+      responses:
+        '200':
+          description: titles response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /categories:
+    get:
+      description: |
+        Returns an array of feed categories
+      operationId: getCategories
+      responses:
+        '200':
+          description: categories response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Feeds:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Feed'
+    Items:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Item'
+    Feed:
+      type: object
+      required:
+        - title
+        - link
+        - description
+        - image
+        - items
+      properties:
+        title:
+          type: string
+        link:
+          type: string
+        description:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        image:
+          $ref: '#/components/schemas/Image'
+        items:
+          $ref: '#/components/schemas/Items'
+    Item:
+      type: object
+      required:
+        - title
+        - link
+        - description
+        - category
+        - guid
+        - published
+        - image
+      properties:
+        title:
+          type: string
+        link:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        guid:
+          type: string
+        published:
+          type: string
+        publishedParsed:
+          type: string
+          format: date-time
+        image:
+          $ref: '#/components/schemas/Image'
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+        title:
+          type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

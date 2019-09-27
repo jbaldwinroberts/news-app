@@ -1,0 +1,6 @@
+port: ":5050"
+feeds:
+  - "http://feeds.bbci.co.uk/news/uk/rss.xml"
+  - "http://feeds.bbci.co.uk/news/technology/rss.xml"
+  - "http://feeds.reuters.com/reuters/UKdomesticNews?format=xml"
+  - "http://feeds.reuters.com/reuters/technologyNews?format=xml"
